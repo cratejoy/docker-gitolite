@@ -1,12 +1,10 @@
-FROM ubuntu:14.04
+FROM cratejoy/python-git
 
 MAINTAINER Amir Elaguizy <aelaguiz@gmail.com>
 
-RUN apt-get update
-
-RUN apt-get -y install sudo
-RUN apt-get -y install openssh-server
-RUN apt-get -y install git
+#RUN echo "deb http://archive.ubuntu.com/ubuntu precise main universe" > /etc/apt/sources.list
+#RUN apt-get update
+RUN apt-get -y install sudo openssh-server
 
 RUN locale-gen en_US.UTF-8
 RUN dpkg-reconfigure locales
@@ -25,7 +23,8 @@ RUN cd /home/git; su git -c "git clone git://github.com/sitaramc/gitolite";
 RUN cd /home/git; su git -c "gitolite/install -ln";
 
 ADD ./init.sh /init
+ADD ./git_admin.pub /home/git/git_admin.pub
 RUN chmod +x /init
-ENTRYPOINT ["/init", "/usr/sbin/sshd", "-D"]
+ENTRYPOINT ["/init"]
 
 EXPOSE 22
